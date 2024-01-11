@@ -6,8 +6,5 @@ https://github.com/guntupalli09/Python-Pong-Game---AI-using-Neat/assets/14275661
 
 
 
-<img src="Execution.png">
-
-<img src="image.png">
 
 

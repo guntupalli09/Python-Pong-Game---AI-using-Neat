@@ -1,5 +1,3 @@
-# https://neat-python.readthedocs.io/en/latest/xor_example.html
-
 from pong import Game
 import pygame
 import neat
@@ -19,6 +17,7 @@ class PongGame:
     def test_ai(self, net):
         clock = pygame.time.Clock()
         run = True
+
         while run:
             clock.tick(60)
             self.game.loop()
@@ -50,7 +49,6 @@ class PongGame:
             pygame.display.update()
 
     def train_ai(self, genome1, genome2, config, draw=False):
-        run = True
         start_time = time.time()
 
         net1 = neat.nn.FeedForwardNetwork.create(genome1, config)
@@ -61,7 +59,7 @@ class PongGame:
 
         max_hits = 50
 
-        while run:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -121,20 +119,22 @@ def eval_genomes(genomes, config):
     pygame.display.set_caption("Pong")
 
     for i, (genome_id1, genome1) in enumerate(genomes):
-        print(round(i / len(genomes) * 100), end=" ")
         genome1.fitness = 0
 
         for genome_id2, genome2 in genomes[min(i + 1, len(genomes) - 1):]:
             genome2.fitness = 0 if genome2.fitness is None else genome2.fitness
             pong = PongGame(win, width, height)
 
-            force_quit = pong.train_ai(genome1, genome2, config, draw=True)
+            force_quit = pong.train_ai(genome1, genome2, config, draw=False)
             if force_quit:
                 quit()
 
 
-def plot_fitness(stats):
+# ------------------ PLOTTING ------------------
+
+def plot_learning_curves(stats):
     generations = range(len(stats.most_fit_genomes))
+
     best_fitness = [g.fitness for g in stats.most_fit_genomes]
     mean_fitness = stats.get_fitness_mean()
 
@@ -148,8 +148,29 @@ def plot_fitness(stats):
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
-    plt.show()
 
+    plt.savefig("fitness_vs_generation.png", dpi=150)
+    plt.close()
+
+
+def plot_network_complexity(stats):
+    generations = range(len(stats.most_fit_genomes))
+    complexity = [len(g.connections) for g in stats.most_fit_genomes]
+
+    plt.figure(figsize=(7, 4))
+    plt.plot(generations, complexity, linewidth=2)
+
+    plt.xlabel("Generation")
+    plt.ylabel("Number of Connections")
+    plt.title("Network Complexity vs Generation")
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+
+    plt.savefig("complexity_vs_generation.png", dpi=150)
+    plt.close()
+
+
+# ------------------ RUN NEAT ------------------
 
 def run_neat(config):
     p = neat.Population(config)
@@ -164,7 +185,8 @@ def run_neat(config):
     with open("best.pickle", "wb") as f:
         pickle.dump(winner, f)
 
-    plot_fitness(stats)
+    plot_learning_curves(stats)
+    plot_network_complexity(stats)
 
 
 def test_best_network(config):

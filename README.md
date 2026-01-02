@@ -16,24 +16,24 @@ Pong provides a minimal yet non-trivial environment to study how coordinated beh
 
 ## Approach
 
-**Algorithm**
+### Algorithm
 - NEAT (evolves topology + weights)
 
-**State Inputs**
+### State Inputs
 - Paddle position  
 - Relative paddle–ball distance  
 - Ball position  
 
-**Action Space**
+### Action Space
 - Stay  
 - Move up  
 - Move down  
 
-**Fitness Signal**
+### Fitness Signal
 - Rally length (ball hits)  
 - Survival time  
 
-**Training**
+### Training
 - Population-based self-play across generations
 
 ---
@@ -42,7 +42,10 @@ Pong provides a minimal yet non-trivial environment to study how coordinated beh
 Agents consistently learn to track and return the ball, with increasingly stable and anticipatory behavior emerging over generations — without any hard-coded strategy.
 
 ### Training Dynamics
-The plot below shows **best and mean fitness per generation**, highlighting population-level learning rather than isolated high-performing agents.
+
+![Fitness vs Generation](fitness_vs_generation.png)
+
+*Best and mean fitness across generations, showing population-level learning rather than isolated high-performing agents.*
 
 - Rising **mean fitness** → stable evolutionary improvement  
 - Faster gains in **best fitness** → exploration + selection  
@@ -73,6 +76,7 @@ This visualization captures **optimization behavior**, not just final performanc
 - Matplotlib  
 
 ---
+
 ## Why This Matters
 This project reflects an interest in how learning and intelligence emerge from simple rules, and how different optimization paradigms shape behavior, core questions in AI research beyond any single algorithm.
   This project prioritizes insight into learning dynamics over polished gameplay.
@@ -82,6 +86,7 @@ This project reflects an interest in how learning and intelligence emerge from s
 ```bash
 pip install neat-python pygame matplotlib
 python main.py
+
 
 
 

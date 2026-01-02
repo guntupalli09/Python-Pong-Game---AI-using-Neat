@@ -1,4 +1,4 @@
-from pong import Game
+from Game import Game
 import pygame
 import neat
 import os
@@ -217,3 +217,4 @@ if __name__ == "__main__":
 
     run_neat(config)
     test_best_network(config)
+

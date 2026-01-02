@@ -1,4 +1,4 @@
-from Game import Game
+from game import Game
 import pygame
 import neat
 import os
@@ -6,6 +6,11 @@ import time
 import pickle
 import matplotlib.pyplot as plt
 
+# ------------------ ABLATION FLAG ------------------
+USE_DURATION_IN_FITNESS = True   # Toggle for reward-design ablation
+
+
+# ------------------ GAME WRAPPER ------------------
 
 class PongGame:
     def __init__(self, window, width, height):
@@ -69,8 +74,7 @@ class PongGame:
 
             if draw:
                 self.game.draw(draw_score=False, draw_hits=True)
-
-            pygame.display.update()
+                pygame.display.update()
 
             duration = time.time() - start_time
             if (
@@ -109,22 +113,26 @@ class PongGame:
                 genome.fitness -= 1
 
     def calculate_fitness(self, game_info, duration):
-        self.genome1.fitness += game_info.left_hits + duration
-        self.genome2.fitness += game_info.right_hits + duration
+        reward = game_info.left_hits
+        if USE_DURATION_IN_FITNESS:
+            reward += duration
+        self.genome1.fitness += reward
+        self.genome2.fitness += reward
 
+
+# ------------------ NEAT EVALUATION ------------------
 
 def eval_genomes(genomes, config):
     width, height = 700, 500
     win = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Pong")
 
-    for i, (genome_id1, genome1) in enumerate(genomes):
+    for i, (_, genome1) in enumerate(genomes):
         genome1.fitness = 0
-
-        for genome_id2, genome2 in genomes[min(i + 1, len(genomes) - 1):]:
+        for _, genome2 in genomes[min(i + 1, len(genomes) - 1):]:
             genome2.fitness = 0 if genome2.fitness is None else genome2.fitness
             pong = PongGame(win, width, height)
 
+            # FAST TRAINING (NO RENDERING)
             force_quit = pong.train_ai(genome1, genome2, config, draw=False)
             if force_quit:
                 quit()
@@ -134,7 +142,6 @@ def eval_genomes(genomes, config):
 
 def plot_learning_curves(stats):
     generations = range(len(stats.most_fit_genomes))
-
     best_fitness = [g.fitness for g in stats.most_fit_genomes]
     mean_fitness = stats.get_fitness_mean()
 
@@ -148,7 +155,6 @@ def plot_learning_curves(stats):
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
-
     plt.savefig("fitness_vs_generation.png", dpi=150)
     plt.close()
 
@@ -165,7 +171,6 @@ def plot_network_complexity(stats):
     plt.title("Network Complexity vs Generation")
     plt.grid(alpha=0.3)
     plt.tight_layout()
-
     plt.savefig("complexity_vs_generation.png", dpi=150)
     plt.close()
 
@@ -189,6 +194,8 @@ def run_neat(config):
     plot_network_complexity(stats)
 
 
+# ------------------ FINAL DEMO ------------------
+
 def test_best_network(config):
     with open("best.pickle", "rb") as f:
         winner = pickle.load(f)
@@ -197,11 +204,13 @@ def test_best_network(config):
 
     width, height = 700, 500
     win = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Pong")
+    pygame.display.set_caption("Best NEAT Pong Agent")
 
     pong = PongGame(win, width, height)
     pong.test_ai(net)
 
+
+# ------------------ ENTRY POINT ------------------
 
 if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)

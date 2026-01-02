@@ -1,0 +1,12 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+
+# NEAT checkpoints
+neat-checkpoint-*
+
+# OS files
+.DS_Store
+Thumbs.db

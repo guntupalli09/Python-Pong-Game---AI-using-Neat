@@ -3,12 +3,12 @@
 ## Overview
 This project explores **neuroevolution** as an alternative to gradient-based learning by evolving neural networks to play **Pong** using **NEAT (NeuroEvolution of Augmenting Topologies)**.
 
-The emphasis is on **learning dynamics, optimization behavior, and emergence of strategy**, rather than maximizing game score or visual polish.
+The emphasis is on **learning dynamics, optimization behavior, and emergent strategy**, rather than maximizing score or visual polish.
 
 ---
 
 ## Motivation
-Most modern AI systems rely on backpropagation and fixed architectures. Neuroevolution instead learns through **population dynamics and selection**, evolving both **weights and network structure**.
+Most modern AI systems rely on backpropagation and fixed architectures. Neuroevolution instead learns through **population dynamics and selection**, evolving both **network structure and parameters**.
 
 Pong provides a minimal yet non-trivial environment to study how coordinated behavior emerges under evolutionary pressure.
 
@@ -31,10 +31,18 @@ Pong provides a minimal yet non-trivial environment to study how coordinated beh
 
 ### Fitness Signal
 - Rally length (ball hits)  
-- Survival time  
+- Optional survival time (ablation-controlled)
 
 ### Training
-- Population-based self-play across generations
+- Population-based self-play across generations  
+- Rendering disabled during training for faster experimentation
+
+---
+
+## Baseline Comparison (Conceptual)
+- **Random policy** → near-zero fitness  
+- **Fixed reactive policy** → short rallies, brittle behavior  
+- **NEAT-evolved policy** → sustained rallies and anticipatory movement  
 
 ---
 
@@ -49,9 +57,7 @@ Agents consistently learn to track and return the ball, with increasingly stable
 
 - Rising **mean fitness** → stable evolutionary improvement  
 - Faster gains in **best fitness** → exploration + selection  
-- Plateaus → convergence limits and fitness shaping effects  
-
-This visualization captures **optimization behavior**, not just final performance.
+- Plateaus → convergence limits and reward shaping effects  
 
 ### Network Complexity
 
@@ -59,20 +65,30 @@ This visualization captures **optimization behavior**, not just final performanc
 
 *Growth in network connectivity over generations, indicating that structural complexity increases only when beneficial for performance.*
 
+---
+
+## Ablation: Reward Design
+An explicit ablation toggles whether **survival time** contributes to fitness.
+
+This helps distinguish between:
+- Passive survival behavior  
+- Active, skillful return strategies  
+
+The experiment highlights how **reward shaping influences emergent behavior** in evolutionary systems.
 
 ---
 
 ## Limitations
 - Computationally expensive compared to gradient-based RL  
 - High variance across random seeds  
-- Fitness design strongly influences convergence behavior  
+- Agents occasionally exploit fitness by tracking the ball without optimal return angles, highlighting sensitivity to reward design  
 
 ---
 
 ## Future Work
 - Compare NEAT against policy-gradient RL on the same environment  
 - Analyze robustness under noise and partial observability  
-- Study network complexity growth vs performance  
+- Study complexity–performance tradeoffs under different mutation regimes  
 
 ---
 
@@ -83,16 +99,20 @@ This visualization captures **optimization behavior**, not just final performanc
 - Matplotlib  
 
 ---
-
 ## Why This Matters
-This project reflects an interest in how learning and intelligence emerge from simple rules, and how different optimization paradigms shape behavior, core questions in AI research beyond any single algorithm.
-  This project prioritizes insight into learning dynamics over polished gameplay.
----
+
+This project focuses on how learning and intelligence emerge from simple rules, and how different optimization paradigms shape behavior — core questions in frontier AI research beyond any single algorithm.
+
+This project prioritizes insight into learning dynamics over polished gameplay.
 
 ## Run
 ```bash
 pip install neat-python pygame matplotlib
 python main.py
+
+---
+
+
 
 
 

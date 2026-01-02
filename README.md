@@ -53,6 +53,13 @@ Agents consistently learn to track and return the ball, with increasingly stable
 
 This visualization captures **optimization behavior**, not just final performance.
 
+### Network Complexity
+
+![Network Complexity vs Generation](complexity_vs_generation.png)
+
+*Growth in network connectivity over generations, indicating that structural complexity increases only when beneficial for performance.*
+
+
 ---
 
 ## Limitations
@@ -86,6 +93,7 @@ This project reflects an interest in how learning and intelligence emerge from s
 ```bash
 pip install neat-python pygame matplotlib
 python main.py
+
 
 
 

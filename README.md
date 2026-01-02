@@ -74,7 +74,7 @@ This visualization captures **optimization behavior**, not just final performanc
 
 ---
 ## Why This Matters
-This project reflects an interest in how learning and intelligence emerge from simple rules, and how different optimization paradigms shape behavior — core questions in AI research beyond any single algorithm.
+This project reflects an interest in how learning and intelligence emerge from simple rules, and how different optimization paradigms shape behavior, core questions in AI research beyond any single algorithm.
   This project prioritizes insight into learning dynamics over polished gameplay.
 ---
 
@@ -82,5 +82,6 @@ This project reflects an interest in how learning and intelligence emerge from s
 ```bash
 pip install neat-python pygame matplotlib
 python main.py
+
 
 
